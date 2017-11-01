@@ -5,8 +5,8 @@
 
     //给div添加样式
     function addstyle(param1, param2) {
-        param1.innerHTML = param2;
-        param1.style.height = param2 * 10 + 'px';
+        // param1.innerHTML = param2;
+        param1.style.height = param2 + 'px';
         param1.style.backgroundColor = 'red';
     }
 
@@ -16,6 +16,7 @@
         var div = document.createElement('div');
 
         if (input.value >= 10 && input.value <= 100) {
+            getAllDiv();
             addstyle(div, input.value);
             bottom.insertBefore(div, but_first);
         } else {
@@ -29,6 +30,7 @@
         var div = document.createElement('div');
 
         if (input.value >= 10 && input.value <= 100) {
+            getAllDiv();
             addstyle(div, input.value);
             bottom.appendChild(div);
         } else {
@@ -40,49 +42,68 @@
     //左侧出
     btns[2].addEventListener("click", function() {
         var div_first = bottom.getElementsByTagName('div')[0];
+        var divs = bottom.getElementsByTagName('div');
+        var divLength = divs.length;
 
-        bottom.removeChild(div_first);
+        if (divLength < 1) {
+            alert("请输入几个队列元素再出队!");
+        } else {
+            bottom.removeChild(div_first);
+        }
+
+
     }, false);
 
     //右侧出
     btns[3].addEventListener("click", function() {
         var divs = bottom.getElementsByTagName('div');
+        var divLength = divs.length;
 
-        bottom.removeChild(divs[divs.length - 1]);
+        if (divLength < 1) {
+            alert("请输入几个队列元素再出队!");
+        } else {
+            bottom.removeChild(divs[divs.length - 1]);
+        }
+
     }, false);
 
-    //获取要排序的数组div的innerHTML
-    function getData() {
-        var divs = bottom.getElementsByTagName('div');
-        var loop_arr = [];
+    //获取队列元素的总数
+    function getAllDiv() {
+        var count = document.getElementsByClassName('bottom')[0].getElementsByTagName('div');
 
-        for (var i = 0; i < divs.length; i++) {
-            loop_arr.push(Number(divs[i].innerHTML));
+        if (count > 60) {
+            alert("队列个数有限!");
+            return;
         }
-        console.log(loop_arr);
-
-        return loop_arr;
     }
 
-    //冒泡排序
-    function sort(data) {
-        for (var m = 0; m < data.length; m++) {
-            for (var n = 0; n < data.length - m; n++) {
-                if (data[n] > data[n + 1]) {
+    //冒泡排序算法
+    function sort() {
+        var divs = bottom.getElementsByTagName('div');
+        var divLength = divs.length;
+
+        if (divLength <= 1) {
+            return;
+        }
+        console.log(divLength);
+        for (var m = 0; m < divs.length; m++) {
+            for (var n = 0; n < divs.length - m - 1; n++) {
+
+                var k0 = parseInt(divs[n].style.height);
+                var k1 = parseInt(divs[n + 1].style.height);
+                if (k0 > k1) {
                     var temp;
-                    temp = data[n];
-                    data[n] = data[n + 1];
-                    data[n + 1] = temp;
+                    temp = divs[n].style.height;
+                    divs[n].style.height = divs[n + 1].style.height;
+                    divs[n + 1].style.height = temp;
                 }
             }
         }
-        console.log(data);
-        return data;
     }
 
     //排序
     btns[4].addEventListener("click", function() {
-        sort(getData());
+        sort();
     }, false);
 
 })();
